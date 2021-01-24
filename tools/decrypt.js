@@ -95,3 +95,6 @@ encryptAndOverwriteAll = () => {
 
 
 decryptAll()
+
+//Bonus:
+//Exp: OMORI\data\Enemies.KEL.decipher.json "exp":[0-9]+, "exp":999999,
