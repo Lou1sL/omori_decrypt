@@ -10,6 +10,6 @@ How to Use
 3. Write DECRYPT KEY into tools\\decrypt.js's decrypt_key variable.
 
 
-4. run node tools\\decrypt.js inside game root folder.
+4. run node tools\\decrypt.js d inside game root folder.
 
 

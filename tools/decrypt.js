@@ -4,6 +4,13 @@
 var decrypt_key = ""
 
 //------------------------------------------------------------------------------------
+// Here are some bonuses for make your life easier :P
+// ┌───────────┬──────────────────────────────────────────┬──────────────────────────────────────────────────────┬──────────────────────────────────────────────────────┐ 
+// │  USAGE    │ PATH                                     │ SEARCH FOR                                           │ CHANGE TO                                            │ 
+// ├───────────┼──────────────────────────────────────────┼──────────────────────────────────────────────────────┼──────────────────────────────────────────────────────┤ 
+// │ Max Exp   │ OMORI\www\data\Enemies.KEL.decipher.json │ "exp":[0-9]+,                                        │ "exp":999999,                                        │ 
+// │ I'm SPEED │ \OMORI\www\js\rpg_objects.js             │ return this._moveSpeed + (this.isDashing() ? 1 : 0); │ return this._moveSpeed + (this.isDashing() ? 2 : 0); │ 
+// └───────────┴──────────────────────────────────────────┴──────────────────────────────────────────────────────┴──────────────────────────────────────────────────────┘ 
 
 const crypto = require("crypto")
 const path = require("path")
@@ -81,7 +88,7 @@ encryptAndOverwriteAll = () => {
     if(!fs.existsSync(log_path)) { console.log('Please decrypt first!'); return }
     var encryptedList = JSON.parse(fs.readFileSync(log_path))
 
-    console.log('Encrypting...')
+    console.log('Encrypt and overwriting...')
     encryptedList.forEach((encryptType) => {
         encryptType.file_list.forEach((fileInfo) => {
             var decryptedPath = fileInfo.path + '.decipher.' + encryptType.real_extension
@@ -93,8 +100,12 @@ encryptAndOverwriteAll = () => {
     console.log('Done!')
 }
 
-
-decryptAll()
-
-//Bonus:
-//Exp: OMORI\www\data\Enemies.KEL.decipher.json "exp":[0-9]+, "exp":999999,
+switch (process.argv.slice(2)[0]) {
+    case 'd': decryptAll(); break
+    case 'e': encryptAndOverwriteAll(); break
+    default: 
+        console.log('Please pass an argument:')
+        console.log('d: Decrypt all files. Decrypted files are in the same folder with the encrypted files and with word \'decipher\' in file name.')
+        console.log('e: Encrypt and overwrite all files. You can edit the decrypted files and then use this function to apply your modification.')
+        console.log('e.g. node tools\\\\' + path.basename(__filename) + ' d')
+}
