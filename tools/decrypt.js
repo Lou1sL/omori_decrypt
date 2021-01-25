@@ -10,6 +10,7 @@ var decrypt_key = ""
 // ├───────────┼──────────────────────────────────────────┼──────────────────────────────────────────────────────┼──────────────────────────────────────────────────────┤ 
 // │ Max Exp   │ OMORI\www\data\Enemies.KEL.decipher.json │ "exp":[0-9]+,                                        │ "exp":999999,                                        │ 
 // │ I'm SPEED │ \OMORI\www\js\rpg_objects.js             │ return this._moveSpeed + (this.isDashing() ? 1 : 0); │ return this._moveSpeed + (this.isDashing() ? 2 : 0); │ 
+// │ ACHIEVE   │ *                                        │ $gameSystem.unlockAchievement(                       │ ---                                                  │
 // └───────────┴──────────────────────────────────────────┴──────────────────────────────────────────────────────┴──────────────────────────────────────────────────────┘ 
 
 const crypto = require("crypto")
