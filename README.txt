@@ -10,7 +10,7 @@ How to Use
 
 4. Run "node tools\\decrypt.js d" command inside game root folder to decrypt all files.
 
-5. Modify and view decrypted files as you like. Decrypted files are in the same folder with the encrypted files and with word 'decipher' in file name.
+5. Modify and view decrypted files as you like. Decrypted files are in the tools\\unpacked folder.
 
 6. Run "node tools\\decrypt.js e" command inside game root folder to apply your modification.
 
@@ -25,7 +25,7 @@ How to Use
 
 4. 在游戏根目录下执行 node tools\\decrypt.js d 命令解密。
 
-5. 修改和查看解密后的文件，其和对应的加密文件位于同一路径下，文件名包含单词 decipher。
+5. 修改和查看解密后的文件，其位于路径 tools\\unpacked 下。
 
 6. 在游戏根目录下执行 node tools\\decrypt.js e 命令应用修改。
 
