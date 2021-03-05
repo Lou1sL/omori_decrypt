@@ -16,10 +16,36 @@ var decrypt_key = ""
 const crypto = require("crypto")
 const path = require("path")
 const fs = require("fs")
+const lzstr = require("./lz-string.js")
 
 const game_path = path.join(__dirname, '\\..\\www\\')
 const unpack_path = path.join(__dirname, '\\unpacked\\')
 const ivinfo_path = path.join(__dirname, '\\ivinfo.json')
+
+const game_savefile_path = path.join(__dirname, '\\..\\www\\save\\')
+const unpack_savefile_path = path.join(__dirname, '\\unpacked\\save\\')
+
+//------------------------SAVES
+
+
+decodeAllSave = () => {
+    console.log('Decoding savefiles...')
+    findExt(game_savefile_path, 'rpgsave').forEach((filepath) => {
+        var decoded = lzstr.decompressFromBase64(fs.readFileSync(filepath, {encoding:'utf8'}))
+        fs.mkdirSync(path.dirname(filepath.replace(game_savefile_path, unpack_savefile_path)), { recursive: true })
+        fs.writeFileSync(filepath.replace(game_savefile_path, unpack_savefile_path) + '.json', decoded)
+    })
+    console.log('Done!')
+}
+
+encodeAllSave = () => {
+    console.log('Encoding and overwriting savefiles...')
+    findExt(unpack_savefile_path, 'json').forEach((filepath) => {
+        var encoded = lzstr.compressToBase64(fs.readFileSync(filepath).toString())
+        fs.writeFileSync(filepath.replace(unpack_savefile_path, game_savefile_path).replace('.json',''), encoded)
+    })
+    console.log('Done!')
+}
 
 //------------------------IMAGES
 
@@ -147,11 +173,24 @@ findExt = (base, ext, files, result) => {
 
 
 switch (process.argv.slice(2)[0]) {
-    case 'd': decodeAllImage(); decryptAllData(); break
-    case 'e': encodeAllImage(); encryptAndOverwriteAllData(); break
+    case 'ds': decodeAllSave();              break
+    case 'es': encodeAllSave();              break
+    case 'di': decodeAllImage();             break
+    case 'ei': encodeAllImage();             break
+    case 'dd': decryptAllData();             break
+    case 'ed': encryptAndOverwriteAllData(); break
+    case 'da': decodeAllSave(); decodeAllImage(); decryptAllData();             break
+    case 'ea': encodeAllSave(); encodeAllImage(); encryptAndOverwriteAllData(); break
     default: 
         console.log('Please pass an argument:')
-        console.log('d: Decrypt all files. Decrypted files are in tools\\unpacked\\ folder.')
-        console.log('e: Encrypt and overwrite files. You can edit the decrypted files and then use this function to apply your modification.')
-        console.log('e.g. node tools\\\\' + path.basename(__filename) + ' d')
+        console.log('ds: Decrypt all save files into \'tools\\unpacked\\save\\\' folder.')
+        console.log('es: Encrypt and overwrite all savefiles.')
+        console.log('di: Decrypt all image files into \'tools\\unpacked\\\' folder.')
+        console.log('ei: Encrypt and overwrite all image files.')
+        console.log('dd: Decrypt all data & script files into \'tools\\unpacked\\\' folder.')
+        console.log('ed: Encrypt and overwrite all data & script files.')
+        console.log('da: Decrypt all mentioned above.')
+        console.log('ea: Encrypt and overwrite all mentioned above.')
+        console.log('e.g. node tools\\' + path.basename(__filename) + ' ds')
+        console.log('You can edit the decrypted files and then apply your modification.')
 }
