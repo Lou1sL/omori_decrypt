@@ -33,7 +33,7 @@ decodeAllSave = () => {
     findExt(game_savefile_path, 'rpgsave').forEach((filepath) => {
         var decoded = lzstr.decompressFromBase64(fs.readFileSync(filepath, {encoding:'utf8'}))
         fs.mkdirSync(path.dirname(filepath.replace(game_savefile_path, unpack_savefile_path)), { recursive: true })
-        fs.writeFileSync(filepath.replace(game_savefile_path, unpack_savefile_path) + '.json', decoded)
+        fs.writeFileSync(filepath.replace(game_savefile_path, unpack_savefile_path).replace('.rpgsave','.json'), decoded)
     })
     console.log('Done!')
 }
@@ -42,7 +42,7 @@ encodeAllSave = () => {
     console.log('Encoding and overwriting savefiles...')
     findExt(unpack_savefile_path, 'json').forEach((filepath) => {
         var encoded = lzstr.compressToBase64(fs.readFileSync(filepath).toString())
-        fs.writeFileSync(filepath.replace(unpack_savefile_path, game_savefile_path).replace('.json',''), encoded)
+        fs.writeFileSync(filepath.replace(unpack_savefile_path, game_savefile_path).replace('.json','.rpgsave'), encoded)
     })
     console.log('Done!')
 }
@@ -66,7 +66,7 @@ decodeAllImage = () => {
     findExt(game_path, 'rpgmvp').forEach((filepath) => {
         var decoded = replaceHeader(fs.readFileSync(filepath), header_rpgmvp.length, header_png)
         fs.mkdirSync(path.dirname(filepath.replace(game_path, unpack_path)), { recursive: true })
-        fs.writeFileSync(filepath.replace(game_path, unpack_path) + '.png', decoded)
+        fs.writeFileSync(filepath.replace(game_path, unpack_path).replace('.rpgmvp','.png'), decoded)
     })
     console.log('Done!')
 }
@@ -75,7 +75,7 @@ encodeAllImage = () => {
     console.log('Encoding images...')
     findExt(unpack_path, 'png').forEach((filepath) => {
         var encoded = replaceHeader(fs.readFileSync(filepath), header_png.length, header_rpgmvp)
-        fs.writeFileSync(filepath.replace(unpack_path, game_path).replace('.png',''), encoded)
+        fs.writeFileSync(filepath.replace(unpack_path, game_path).replace('.png','.rpgmvp'), encoded)
     })
     console.log('Done!')
 }
@@ -127,7 +127,7 @@ decryptAllData = () => {
     console.log('Decrypting data/scripts...')
     encryptedList.forEach((encryptType) => {
         encryptType.file_list.forEach((fileInfo) => {
-            var decryptedPath = fileInfo.path.replace(game_path, unpack_path) + '.' + encryptType.real_extension
+            var decryptedPath = fileInfo.path.replace(game_path, unpack_path).replace('.'+encryptType.extension, '.'+encryptType.real_extension)
             fs.mkdirSync(path.dirname(decryptedPath), { recursive: true })
             var buff = fs.readFileSync(fileInfo.path)
             var res = decryptData(buff).toString()
@@ -146,7 +146,7 @@ encryptAndOverwriteAllData = () => {
     console.log('Encrypting and overwriting data/scripts...')
     encryptedList.forEach((encryptType) => {
         encryptType.file_list.forEach((fileInfo) => {
-            var decryptedPath = fileInfo.path.replace(game_path, unpack_path) + '.' + encryptType.real_extension
+            var decryptedPath = fileInfo.path.replace(game_path, unpack_path).replace('.'+encryptType.extension, '.'+encryptType.real_extension)
             var buff = fs.readFileSync(decryptedPath)
             var res = encryptData(buff, fileInfo.iv)
             fs.writeFileSync(fileInfo.path, res)
