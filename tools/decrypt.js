@@ -32,20 +32,20 @@ const unpack_savefile_path = path.join(__dirname, '\\unpacked\\save\\')
 
 //------------------------AUDIOS
 
-const header_rpgmvo = new Uint8Array([0x52, 0x50, 0x47, 0x4D, 0x56, 0x00, 0x00, 0x00, 0x00, 0x03, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00])
+const header_rpgmv = new Uint8Array([0x52, 0x50, 0x47, 0x4D, 0x56, 0x00, 0x00, 0x00, 0x00, 0x03, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00])
 
-audioKey = () => {
-    if(decrypt_key === '') { console.log('Please extract decrypt key first!'); return }
-    if(!fs.existsSync(ivinfo_path)) { console.log('Please decrypt first!'); return }
-    if(!fs.existsSync(unpack_sysjson_path)) { console.log('Can\'t find System.json!'); return }
+rpgmvKey = () => {
+    if(decrypt_key === '') { throw('Please extract decrypt key first!') }
+    if(!fs.existsSync(ivinfo_path)) { throw('Please decrypt data and script first!') }
+    if(!fs.existsSync(unpack_sysjson_path)) { throw('Can\'t find System.json!') }
     return JSON.parse(fs.readFileSync(unpack_sysjson_path)).encryptionKey.split(/(.{2})/).filter(Boolean)
 }
 
 decodeAllAudio = () => {
-    var key = audioKey()
+    var key = rpgmvKey()
     console.log('Decrypting audio files...')
     unpackrepack(game_audio_path, 'rpgmvo', unpack_audio_path, 'ogg', (filedata) => {
-        var decoded = replaceHeader(filedata, header_rpgmvo.length)
+        var decoded = replaceHeader(filedata, header_rpgmv.length)
         for (var i = 0; i < 16; i++) decoded[i] = decoded[i] ^ parseInt(key[i], 16)
         return decoded
     })
@@ -53,11 +53,11 @@ decodeAllAudio = () => {
 }
 
 encodeAllAudio = () => {
-    var key = audioKey()
+    var key = rpgmvKey()
     console.log('Encrypting and overwriting audio files...')
     unpackrepack(unpack_audio_path, 'ogg', game_audio_path, 'rpgmvo', (filedata) => {
         for (var i = 0; i < 16; i++) filedata[i] = filedata[i] ^ parseInt(key[i], 16)
-        return replaceHeader(filedata, 0, header_rpgmvo)
+        return replaceHeader(filedata, 0, header_rpgmv)
     })
     console.log('Done!')
 }
@@ -85,25 +85,23 @@ encodeAllSave = () => {
 }
 
 //------------------------IMAGES
-
-const header_rpgmvp = new Uint8Array([0x52, 0x50, 0x47, 0x4D, 0x56, 0x00, 0x00, 0x00, 0x00, 0x03, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2E, 0x87, 0x4C, 0x27, 0xA7, 0xE1, 0xA6, 0xED, 0x4B, 0xBB, 0xFF, 0x3C, 0xDD, 0xBA, 0xF7, 0x44])
-const header_png = new Uint8Array([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52])
-
 decodeAllImage = () => {
+    var key = rpgmvKey()
     console.log('Decoding images...')
-    findExt(game_path, 'rpgmvp').forEach((filepath) => {
-        var decoded = replaceHeader(fs.readFileSync(filepath), header_rpgmvp.length, header_png)
-        fs.mkdirSync(path.dirname(filepath.replace(game_path, unpack_path)), { recursive: true })
-        fs.writeFileSync(filepath.replace(game_path, unpack_path).replace('.rpgmvp','.png'), decoded)
+    unpackrepack(game_path, 'rpgmvp', unpack_path, 'png', (filedata) => {
+        var decoded = replaceHeader(filedata, header_rpgmv.length)
+        for (var i = 0; i < 16; i++) decoded[i] = decoded[i] ^ parseInt(key[i], 16)
+        return decoded
     })
     console.log('Done!')
 }
 
 encodeAllImage = () => {
-    console.log('Encoding images...')
-    findExt(unpack_path, 'png').forEach((filepath) => {
-        var encoded = replaceHeader(fs.readFileSync(filepath), header_png.length, header_rpgmvp)
-        fs.writeFileSync(filepath.replace(unpack_path, game_path).replace('.png','.rpgmvp'), encoded)
+    var key = rpgmvKey()
+    console.log('Encoding and overwriting images...')
+    unpackrepack(unpack_path, 'png', game_path, 'rpgmvp', (filedata) => {
+        for (var i = 0; i < 16; i++) filedata[i] = filedata[i] ^ parseInt(key[i], 16)
+        return replaceHeader(filedata, 0, header_rpgmv)
     })
     console.log('Done!')
 }
@@ -146,7 +144,7 @@ findAllEncryptedData = () => {
 }
 
 decryptAllData = () => {
-    if(decrypt_key === '') { console.log('Please extract decrypt key first!'); return }
+    if(decrypt_key === '') { throw('Please extract decrypt key first!') }
 
     console.log('Finding encrypted data/scripts...')
     var encryptedList = findAllEncryptedData()
@@ -166,9 +164,9 @@ decryptAllData = () => {
 }
 
 encryptAllData = () => {
-    if(decrypt_key === '') { console.log('Please extract decrypt key first!'); return }
+    if(decrypt_key === '') { throw('Please extract decrypt key first!') }
 
-    if(!fs.existsSync(ivinfo_path)) { console.log('Please decrypt first!'); return }
+    if(!fs.existsSync(ivinfo_path)) { throw('Please decrypt first!') }
     var encryptedList = JSON.parse(fs.readFileSync(ivinfo_path))
 
     console.log('Encrypting and overwriting data/scripts...')
@@ -218,24 +216,24 @@ replaceHeader = (data, old_header_len, new_header = null) => {
 
 
 switch (process.argv.slice(2)[0]) {
+    case 'dd': decryptAllData(); break
+    case 'ed': encryptAllData(); break
     case 'da': decodeAllAudio();  break
     case 'ea': encodeAllAudio();  break
     case 'di': decodeAllImage(); break
     case 'ei': encodeAllImage(); break
-    case 'dd': decryptAllData(); break
-    case 'ed': encryptAllData(); break
     case 'ds': decodeAllSave();  break
     case 'es': encodeAllSave();  break
-    case 'd': decodeAllAudio(); decodeAllImage(); decryptAllData(); decodeAllSave(); break
-    case 'e': encodeAllAudio(); encodeAllImage(); encryptAllData(); encodeAllSave(); break
+    case 'd': decryptAllData(); decodeAllAudio(); decodeAllImage(); decodeAllSave(); break
+    case 'e': encryptAllData(); encodeAllAudio(); encodeAllImage(); encodeAllSave(); break
     default: 
         console.log('Please pass an argument:')
+        console.log('dd: Decrypt all data & script files.')
+        console.log('ed: Encrypt and overwrite all data & script files.')
         console.log('da: Decrypt all audio files above.')
         console.log('ea: Encrypt and overwrite all audio files.')
         console.log('di: Decrypt all image files.')
         console.log('ei: Encrypt and overwrite all image files.')
-        console.log('dd: Decrypt all data & script files.')
-        console.log('ed: Encrypt and overwrite all data & script files.')
         console.log('ds: Decrypt all save files.')
         console.log('es: Encrypt and overwrite all savefiles.')
         console.log('d: Decrypt all mentioned above.')
