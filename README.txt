@@ -36,5 +36,3 @@ How to Use
 5. 修改和查看解密后的文件，其位于路径 tools\unpacked 下。
 
 6. 在游戏根目录下执行 node tools\decrypt.js e 命令应用修改。
-
-此外，将DECRYPT KEY作为参数可以免STEAM启动（创建个快捷方式就OK）。
