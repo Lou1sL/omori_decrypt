@@ -225,8 +225,8 @@ switch (process.argv.slice(2)[0]) {
     case 'ei': encodeAllImage(); break
     case 'ds': decodeAllSave();  break
     case 'es': encodeAllSave();  break
-    case 'd': decryptAllData(); decodeAllAudio(); decodeAllImage(); decodeAllSave(); break
-    case 'e': encryptAllData(); encodeAllAudio(); encodeAllImage(); encodeAllSave(); break
+    case 'd': decryptAllData(); decodeAllAudio(); decodeAllImage(); break
+    case 'e': encryptAllData(); encodeAllAudio(); encodeAllImage(); break
     default: 
         console.log('Please pass an argument:')
         console.log('dd: Decrypt all data & script files.')
@@ -237,8 +237,8 @@ switch (process.argv.slice(2)[0]) {
         console.log('ei: Encrypt and overwrite all image files.')
         console.log('ds: Decrypt all save files.')
         console.log('es: Encrypt and overwrite all savefiles.')
-        console.log('d: Decrypt all mentioned above.')
-        console.log('e: Encrypt and overwrite all mentioned above.')
+        console.log('d: Decrypt all mentioned above except save files.')
+        console.log('e: Encrypt and overwrite all mentioned above except save files.')
         console.log('Decrypted files are located in \'tools\\unpacked\\\' folder.')
         console.log('You can edit the decrypted files and then encrypt to apply your modification.')
         console.log('e.g. node tools\\' + path.basename(__filename) + ' ds')
