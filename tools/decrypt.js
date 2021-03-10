@@ -134,6 +134,7 @@ fileListWithIVInfo = (filePathList) => {
 
 findAllEncryptedData = () => {
     var encrypt = [
+        { extension : 'xlsx'  , real_extension : 'xlsx', file_list : fileListWithIVInfo(findExt(game_path, 'xlsx'  ))},
         { extension : 'OMORI' , real_extension : 'js'  , file_list : fileListWithIVInfo(findExt(game_path, 'OMORI' ))},
         { extension : 'KEL'   , real_extension : 'json', file_list : fileListWithIVInfo(findExt(game_path, 'KEL'   ))},
         { extension : 'HERO'  , real_extension : 'yaml', file_list : fileListWithIVInfo(findExt(game_path, 'HERO'  ))},
@@ -156,7 +157,7 @@ decryptAllData = () => {
             var decryptedPath = fileInfo.path.replace(game_path, unpack_path).replace('.'+encryptType.extension, '.'+encryptType.real_extension)
             fs.mkdirSync(path.dirname(decryptedPath), { recursive: true })
             var buff = fs.readFileSync(fileInfo.path)
-            var res = decryptData(buff).toString()
+            var res = decryptData(buff)
             fs.writeFileSync(decryptedPath, res)
         })
     })
