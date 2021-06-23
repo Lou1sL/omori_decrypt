@@ -11,7 +11,7 @@ How to Use
 
 1. Copy All Contents from this folder into OMORI game folder(should overwrite something).
 
-2. Run game, DECRYPT KEY should appear on the top left corner of the game window.
+2. Run game, DECRYPT KEY should appear on the top left corner of the game window. Make sure to disable Fullscreen mode, since the key might not be visible (black text on black background).
 
 3. Write DECRYPT KEY into tools\decrypt.js's decrypt_key variable.
 
