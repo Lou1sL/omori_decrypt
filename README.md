@@ -1,8 +1,4 @@
 
-![](https://raw.githubusercontent.com/toshirodesu/omori_decrypt/main/title.jpg)
-
-
-
 This program can decrypt and re-encrypt overwrite all the files (including images, audios, scripts, datas, and save files) of the game OMORI.
 
 Need Node.js
