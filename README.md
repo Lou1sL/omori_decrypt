@@ -1,21 +1,17 @@
-
+# OMORI_DECRYPT
 This program can decrypt and re-encrypt overwrite all the files (including images, audios, scripts, datas, and save files) of the game OMORI.
 
 Need Node.js
 
 How to Use
 
-1. Copy All Contents from this folder into OMORI game folder(should overwrite something).
+1. Copy decrypt.js into OMORI game folder.
 
-2. Run game, DECRYPT KEY should appear on the top left corner of the game window. Make sure to disable Fullscreen mode, since the key might not be visible (black text on black background).
+2. Run "node decrypt.js d" command inside game root folder to decrypt all files.
 
-3. Write DECRYPT KEY into tools\decrypt.js's decrypt_key variable.
+3. Modify and view decrypted files as you like. Decrypted files are in the unpacked folder.
 
-4. Run "node tools\decrypt.js d" command inside game root folder to decrypt all files.
-
-5. Modify and view decrypted files as you like. Decrypted files are in the tools\\unpacked folder.
-
-6. Run "node tools\decrypt.js e" command inside game root folder to apply your modification.
+4. Run "node decrypt.js e" command inside game root folder to apply your modification.
 
 
 这个工具能解密并重新加密覆盖OMORI的加密文件（包含图片、声音、代码及数据、存档）
@@ -24,14 +20,25 @@ How to Use
 
 使用方法：
 
-1. 将该文件夹下全部内容复制到OMORI的游戏根目录（会提示覆盖文件）。
+1. 将decrypt.js复制到OMORI的游戏根目录。
 
-2. 执行游戏，DECRYPT KEY 会显示在游戏界面左上角。
+3. 在游戏根目录下执行 node decrypt.js d 命令解密全部文件。
 
-3. 抄写 DECRYPT KEY 的值到 tools\decrypt.js 的 decrypt_key 变量中。
+4. 修改和查看解密后的文件，其位于路径 unpacked 下。
 
-4. 在游戏根目录下执行 node tools\decrypt.js d 命令解密全部文件。
+5. 在游戏根目录下执行 node decrypt.js e 命令应用修改。
 
-5. 修改和查看解密后的文件，其位于路径 tools\unpacked 下。
 
-6. 在游戏根目录下执行 node tools\decrypt.js e 命令应用修改。
+이 프로그램은 OMORI 게임의 모든 파일(이미지, 오디오, 스크립트, 데이터 및 저장 파일 포함)을 암호 해독하고 다시 암호화하여 덮어쓸 수 있습니다.
+
+Node.js가 필요합니다.
+
+사용하는 방법
+
+1. 오모리 폴더 안에 decrypt.js를 복사합니다.
+
+2. 게임 폴더 내에서 "node decrypt.js d" 명령을 실행하여 모든 파일을 복호화하세요.
+
+3. 복호화된 파일을 원하는 대로 수정하고 확인하세요. 해독된 파일은 unpacked 폴더에 있습니다.
+
+4. 게임 루트 폴더 내에서 "node decrypt.js e" 명령을 실행하여 수정 사항을 적용하세요.
